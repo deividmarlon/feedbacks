@@ -18,7 +18,7 @@ routes.post('/feedbacks', async (req,res) => {
 
   await submitFeedbackUseCase.execute({
     type,
-     comment,
+    comment,
     screenshot
   })
   return res.status(201).send()
@@ -28,5 +28,18 @@ routes.post('/any', async (req,res) => {
 
   const body = req.body;
 
-  return res.status(201).json(body)
+  const prismaFeedbacksRepository = new PrismaFeedbacksRepository();
+  const nodemailerMailAdapter = new NodemailerMailAdapter();
+
+  const submitFeedbackUseCase = new SubmitFeedbackUseCase(
+    prismaFeedbacksRepository,nodemailerMailAdapter
+  )
+
+  await submitFeedbackUseCase.execute({
+    type:"BUG",
+    comment: JSON.stringify(body),
+    screenshot: undefined
+  })
+
+  return res.status(201).send()
 })
