@@ -23,3 +23,10 @@ routes.post('/feedbacks', async (req,res) => {
   })
   return res.status(201).send()
 })
+
+routes.post('/any', async (req,res) => {
+
+  const body = req.body;
+
+  return res.status(201).json(body)
+})
